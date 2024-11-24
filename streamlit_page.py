@@ -23,7 +23,7 @@ def filter_articles(file_name, timestamp_start, timestamp_end):
     return filtered
 
 # Streamlit App
-st.title("Newsfeed Article Filter")
+st.title("What happend in SG")
 st.write("Filter news articles from multiple sources based on a date range.")
 
 # Input fields for start and end date
