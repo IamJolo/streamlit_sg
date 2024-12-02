@@ -2,7 +2,6 @@ import streamlit as st
 from datetime import datetime
 import json
 from bs4 import BeautifulSoup
-from openai import OpenAI
 import google.generativeai as genai
 
 
