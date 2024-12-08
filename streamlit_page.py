@@ -4,6 +4,7 @@ import json
 from bs4 import BeautifulSoup
 import google.generativeai as genai
 
+# ------------------------ Utility Functions ------------------------
 
 # Function to clean HTML content in description
 def clean_html(html):
@@ -24,17 +25,26 @@ def filter_articles(file_name, timestamp_start, timestamp_end):
             filtered.append({"title": title, "description": description})
     return filtered
 
+# ------------------------ Streamlit App ------------------------
 
-# Streamlit App
-st.title("What happened in SG")
-st.write("Filter news articles from multiple sources based on a date range.")
+# Page Configuration
+st.set_page_config(page_title="SG News Filter", page_icon="📰", layout="wide")
 
-# User input for OpenAI API key
-api_key = st.text_input("Enter your OpenAI API Key", type="password")
+# Sidebar for API Key
+st.sidebar.title("🔐 API Configuration")
+api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
 
-# Input fields for start and end date
-start_date = st.date_input("Start Date", datetime(2024, 11, 15))
-end_date = st.date_input("End Date", datetime(2024, 11, 17))
+# Main Title and Description
+st.title("📰 What Happened in St. Gallen?")
+st.markdown("### Filter news articles from multiple sources by selecting a date range and get a summary powered by Gemini AI.")
+
+# Date Range Input
+st.subheader("📅 Select Date Range")
+col1, col2 = st.columns(2)
+with col1:
+    start_date = st.date_input("Start Date", datetime(2024, 11, 15))
+with col2:
+    end_date = st.date_input("End Date", datetime(2024, 11, 17))
 
 # Convert dates to datetime format
 timestamp_start = datetime.combine(start_date, datetime.min.time())
@@ -54,38 +64,43 @@ if api_key:
     model = genai.GenerativeModel('gemini-1.5-flash')
 
     def summarize_text(text):
-        
         try:
             response = model.generate_content('Summarize this text: ' + text)
             return response.text
         except Exception as e:
             return f"Error summarizing text: {str(e)}"
 
-
-
-
-
-
     # Filter and display results when the user clicks a button
-    if st.button("Filter Articles"):
-        filtered_articles = []
-        for file_name in file_names:
-            filtered_articles.extend(filter_articles(file_name, timestamp_start, timestamp_end))
+    if st.button("🔍 Filter Articles", use_container_width=True):
+        with st.spinner("Filtering articles..."):
+            filtered_articles = []
+            for file_name in file_names:
+                filtered_articles.extend(filter_articles(file_name, timestamp_start, timestamp_end))
         
-        # Summarize all articles into a single text
         if filtered_articles:
-            st.write(f"Found {len(filtered_articles)} articles. Summarizing all articles into one summary...")
+            st.success(f"✅ Found {len(filtered_articles)} articles.")
+            st.markdown("### Summarizing all articles...")
             
             # Combine all article descriptions
             combined_text = " ".join(article["description"] for article in filtered_articles)
             
             # Summarize the combined text
-            with st.spinner("Summarizing all articles..."):
+            with st.spinner("Summarizing articles..."):
                 summary = summarize_text(combined_text)
             
-            st.write("Summary of all articles:")
+            st.subheader("📝 Summary of All Articles")
             st.write(summary)
+
+            # Option to expand and view individual articles
+            with st.expander("📚 View All Articles"):
+                for i, article in enumerate(filtered_articles, start=1):
+                    st.write(f"**{i}. {article['title']}**")
+                    st.write(article["description"])
+                    st.write("---")
         else:
-            st.write("No articles found in the selected date range.")
+            st.warning("⚠️ No articles found in the selected date range.")
 else:
-    st.warning("Please provide your OpenAI API key to proceed.")
+    st.sidebar.warning("Please provide your Gemini API key to proceed.")
+
+
+
