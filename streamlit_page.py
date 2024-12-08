@@ -65,7 +65,7 @@ if api_key:
 
     def summarize_text(text):
         try:
-            response = model.generate_content('This is a text on what happened in the city of St Gallen, summarize the text and report on what happened in St. Gallen: ' + text)
+            response = model.generate_content('This is a text on what happened in the city of St Gallen, summarize it into one article and report on what happened in St. Gallen: ' + text)
             return response.text
         except Exception as e:
             return f"Error summarizing text: {str(e)}"
@@ -104,3 +104,4 @@ else:
 
 
 
+#streamlit run streamlit_page.py
