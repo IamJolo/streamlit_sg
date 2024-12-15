@@ -45,7 +45,10 @@ api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
 
 # Setting Main Title and Description
 st.title("📰 What Happened in St. Gallen?")
-st.markdown("### Filter news articles from multiple sources by selecting a date range and get a summary powered by Gemini AI.")
+st.write("""What Happened in St. Gallen allows you to explore recent news from St. Gallen.  By providing a Gemini API key, entering a specific date 
+range and selecting from several sources, including the St. Gallen Police, City Administration, and Canton of St. Gallen you an AI summary 
+ what happended in St. Gallen
+""")
 
 # Defining the date input fields
 st.subheader("📅 Select Date Range")
@@ -61,9 +64,9 @@ timestamp_end = datetime.combine(end_date, datetime.min.time())
 
 # Define list of file names and their labels
 datasets = {
-    "Stadtpolizei St. Gallen - Medienmitteilungen": "newsfeed-stadtpolizei-stgallen-medienmitteilungen@stadt-stgallen.json",
-    "Stadtverwaltung St. Gallen": "newsfeed-stadtverwaltung-stgallen@stadt-stgallen.json",
-    "Kanton St. Gallen - Medienmitteilungen": "newsfeed-medienmitteilungen-kanton-stgallen.json"
+    "St. Gallen City Police - Media releases": "newsfeed-stadtpolizei-stgallen-medienmitteilungen@stadt-stgallen.json",
+    "City administration of St. Gallen - Media releases": "newsfeed-stadtverwaltung-stgallen@stadt-stgallen.json",
+    "Canton of St. Gallen - Media releases": "newsfeed-medienmitteilungen-kanton-stgallen.json"
 }
 
 # Selectors for datasets

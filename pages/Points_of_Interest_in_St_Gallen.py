@@ -8,6 +8,10 @@ st.set_page_config(page_title="St. Gallen Points of Interest - 3D Map", page_ico
 
 st.title("🗺️ 3D Visualization of Points of Interest in St. Gallen")
 
+st.write("""Explore the city of St. Gallen through an interactive 3D map that 
+visualizes various points of interest. By selecting different categories you can see their locations represented with visual markers 
+on the map. When hovering your mouse over the market Name, Category, Address, Opening Hours and the Phone Number is displayed, if available """)
+
 # Load JSON data from the file
 @st.cache_data
 def load_data(file_path):
@@ -60,10 +64,10 @@ category_translation = {
     "Kinder- und Jugendtreff": "Children and Youth Center",
     "Kindergärten": "Kindergartens",
     "Kino": "Cinema",
-    "Krippen, FSA und Tagesbetreuungen": "Crèches, FSA and Day Care",
+    "Krippen und Tagesbetreuungen": "Nurseries and daycare centers",
     "Kulturelles": "Cultural Sites",
     "Mobility": "Mobility",
-    "Parkplätze, Parkhäuser": "Parking Lots, Parking Garages",
+    "Parkplätze, Parkhäuser": "Parking Lots and Parking Garages",
     "Post": "Post Office",
     "Religiöse Bauten": "Religious Buildings",
     "Restaurants": "Restaurants",
@@ -72,7 +76,7 @@ category_translation = {
     "Spielplätze": "Playgrounds",
     "Sportanlagen": "Sports Facilities",
     "Stadtverwaltung": "City Administration",
-    "Velostation Veloverleih": "Bike Station Bike Rental",
+    "Velostation Veloverleih": "Bike and Bike Rental Stations",
     "Verschiedenes": "Miscellaneous",
     "Öffentliche WC": "Public Restrooms"
 }
