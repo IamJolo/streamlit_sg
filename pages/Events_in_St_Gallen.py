@@ -118,3 +118,8 @@ if api_key:
             st.warning("⚠️ No articles found in the selected date range.")
 else:
     st.sidebar.warning("Please provide your Gemini API key to proceed.")
+
+# Footer
+st.markdown("""
+    <p style="text-align: center; color: grey;">Skills: Programming - Introduction Level | A Project for exploring St. Gallen</p>
+    """, unsafe_allow_html=True)

@@ -51,7 +51,7 @@ category_translation = {
     "Restaurant": "Restaurant",
     "Café": "Café",
     "Theater": "Theater",
-    "Apotheke": "Pharmacy",
+    "Apotheke, Drogerie": "Pharmacy",
     "Drogerie": "Drugstore",
     "Aus- und Weiterbildung": "Education and Training",
     "Banken": "Banks",
@@ -64,7 +64,7 @@ category_translation = {
     "Kinder- und Jugendtreff": "Children and Youth Center",
     "Kindergärten": "Kindergartens",
     "Kino": "Cinema",
-    "Krippen und Tagesbetreuungen": "Nurseries and daycare centers",
+    "Krippen, FSA und Tagesbetreuungen": "Nurseries and daycare centers",
     "Kulturelles": "Cultural Sites",
     "Mobility": "Mobility",
     "Parkplätze, Parkhäuser": "Parking Lots and Parking Garages",
@@ -145,3 +145,7 @@ else:
         map_style=white_map_style,  # Set the map style to a white/light theme
         tooltip=tooltip  # Apply the tooltip
     ))
+# Footer
+st.markdown("""
+    <p style="text-align: center; color: grey;">Skills: Programming - Introduction Level | A Project for exploring St. Gallen</p>
+    """, unsafe_allow_html=True)
