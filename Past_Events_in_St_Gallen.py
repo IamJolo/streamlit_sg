@@ -6,11 +6,11 @@ import google.generativeai as genai
 
 # ------------------------ Utility Functions ------------------------
 
-# Function to clean HTML content in description
+# Defining function to clean HTML content in the data
 def clean_html(html):
     return BeautifulSoup(html, "html.parser").get_text()
 
-# Function to filter articles based on the date range
+# Defining a function to filter articles based on the date range
 def filter_articles(file_name, timestamp_start, timestamp_end):
     with open(file_name, "r", encoding="utf-8") as file:
         data = json.load(file)
@@ -25,20 +25,29 @@ def filter_articles(file_name, timestamp_start, timestamp_end):
             filtered.append({"title": title, "description": description})
     return filtered
 
+def summarize_text(text):
+    try:
+        response = model.generate_content(
+            'This is a text on what happened in the city of St. Gallen, summarize it into one article and report on what happened in St. Gallen: ' + text
+        )
+        return response.text
+    except Exception as e:
+        return f"Error summarizing text: {str(e)}"
+
 # ------------------------ Streamlit App ------------------------
 
 # Page Configuration
 st.set_page_config(page_title="SG News Filter", page_icon="📰", layout="wide")
 
-# Sidebar for API Key
+# Defining the Sidebar for the API Key
 st.sidebar.title("🔐 API Configuration")
 api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
 
-# Main Title and Description
+# Setting Main Title and Description
 st.title("📰 What Happened in St. Gallen?")
 st.markdown("### Filter news articles from multiple sources by selecting a date range and get a summary powered by Gemini AI.")
 
-# Date Range Input
+# Defining the date input fields
 st.subheader("📅 Select Date Range")
 col1, col2 = st.columns(2)
 with col1:
@@ -46,42 +55,47 @@ with col1:
 with col2:
     end_date = st.date_input("End Date", datetime(2024, 11, 17))
 
-# Convert dates to datetime format
+# Converting dates to datetime format
 timestamp_start = datetime.combine(start_date, datetime.min.time())
 timestamp_end = datetime.combine(end_date, datetime.min.time())
 
-# File names to process
-file_names = [
-    "newsfeed-stadtpolizei-stgallen-medienmitteilungen@stadt-stgallen.json",
-    "newsfeed-stadtverwaltung-stgallen@stadt-stgallen.json",
-    "newsfeed-medienmitteilungen-kanton-stgallen.json"
-]
+# Define list of file names and their labels
+datasets = {
+    "Stadtpolizei St. Gallen - Medienmitteilungen": "newsfeed-stadtpolizei-stgallen-medienmitteilungen@stadt-stgallen.json",
+    "Stadtverwaltung St. Gallen": "newsfeed-stadtverwaltung-stgallen@stadt-stgallen.json",
+    "Kanton St. Gallen - Medienmitteilungen": "newsfeed-medienmitteilungen-kanton-stgallen.json"
+}
+
+# Selectors for datasets
+st.subheader("🗂️ Select Datasets to Filter")
+selected_datasets = []
+for label, file_name in datasets.items():
+    if st.checkbox(f"{label}", value=True):
+        selected_datasets.append(file_name)
+
+# Display field if API key is not provided
+if not api_key:
+    st.error('Enter your API key to filter', icon="⚠️")
 
 # Check if API key is provided
 if api_key:
-    # Initialize OpenAI client dynamically with user-provided key
+    # Initialize Gemini API with API key
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('gemini-1.5-flash')
 
-    def summarize_text(text):
-        try:
-            response = model.generate_content('This is a text on what happened in the city of St Gallen, summarize it into one article and report on what happened in St. Gallen: ' + text)
-            return response.text
-        except Exception as e:
-            return f"Error summarizing text: {str(e)}"
-
-    # Filter and display results when the user clicks a button
+    # Filter and summarize results when the user clicks the button "Filter Articles"
     if st.button("🔍 Filter Articles", use_container_width=True):
         with st.spinner("Filtering articles..."):
             filtered_articles = []
-            for file_name in file_names:
+            for file_name in selected_datasets:
                 filtered_articles.extend(filter_articles(file_name, timestamp_start, timestamp_end))
         
         if filtered_articles:
+            # Display number of articles in date range
             st.success(f"✅ Found {len(filtered_articles)} articles.")
             st.markdown("### Summarizing all articles...")
             
-            # Combine all article descriptions
+            # Combine all articles
             combined_text = " ".join(article["description"] for article in filtered_articles)
             
             # Summarize the combined text
@@ -91,7 +105,7 @@ if api_key:
             st.subheader("📝 Summary of All Articles")
             st.write(summary)
 
-            # Option to expand and view individual articles
+            # Showing expander to view all individual articles
             with st.expander("📚 View All Articles"):
                 for i, article in enumerate(filtered_articles, start=1):
                     st.write(f"**{i}. {article['title']}**")
@@ -101,7 +115,3 @@ if api_key:
             st.warning("⚠️ No articles found in the selected date range.")
 else:
     st.sidebar.warning("Please provide your Gemini API key to proceed.")
-
-
-
-#streamlit run streamlit_page.py
