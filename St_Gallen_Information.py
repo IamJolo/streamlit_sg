@@ -1,17 +1,17 @@
 import streamlit as st
 from PIL import Image
 
-# Set the page title
+#Configuring the page and setting the title
 st.set_page_config(page_title="St. Gallen Information Hub", page_icon="🗺️", layout="wide")
 
-# Display the image at the top of the page
+#Display the image at the top of the page
 image = Image.open('IMG_St_Gallen.jpg')  # Ensure the image is in the same directory or provide the correct path
 st.image(image)
 
-# Title for the landing page
+#Title for the landing page
 st.title("Welcome to the St. Gallen Information Hub")
 
-# Brief description of the website
+#Displaying text of the website
 st.write("""
 Welcome to the **St. Gallen Information Hub** – your website for discovering important news and exploring in St. Gallen, Switzerland.
 
@@ -27,7 +27,7 @@ Whether you’re a long-time resident, a newcomer, or a visitor, this platform m
 To use this platform, you’ll need to enter your Gemini API key to access the news summarizing feature.
 """)
 
-# Optional: Add a footer (you can customize this as needed)
+#Display Footer
 st.markdown("""
     <p style="text-align: center; color: grey;">Skills: Programming - Introduction Level | A Project for exploring St. Gallen</p>
     """, unsafe_allow_html=True)

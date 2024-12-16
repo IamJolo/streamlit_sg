@@ -3,26 +3,28 @@ import pandas as pd
 import pydeck as pdk
 import json
 
-# Page configuration
+#Setting Page configuration
 st.set_page_config(page_title="St. Gallen Points of Interest - 3D Map", page_icon="🗺️", layout="wide")
 
+#Setting title
 st.title("🗺️ 3D Visualization of Points of Interest in St. Gallen")
 
+#Displaying Introtext
 st.write("""Explore the city of St. Gallen through an interactive 3D map that 
 visualizes various points of interest. By selecting different categories you can see their locations represented with visual markers 
 on the map. When hovering your mouse over the market Name, Category, Address, Opening Hours and the Phone Number is displayed, if available """)
 
-# Load JSON data from the file
+#Function to load and cache JSON data from the file
 @st.cache_data
 def load_data(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
         return json.load(file)
 
-# Load new dataset
+#Load dataset
 data_file = "points-of-interest-@stadt-stgallen.json"
 data = load_data(data_file)
 
-# Transform data into a DataFrame
+#Transform data into a DataFrame by looping through each entry in the input data  extracting relevant fields and then storing these entries as dictionaries in a list
 def transform_data(data):
     records = []
     for entry in data:
@@ -41,7 +43,7 @@ def transform_data(data):
 
 df = transform_data(data)
 
-# Dictionary to map categories to English
+#Dictionary to map categories to English
 category_translation = {
     "Spielplatz": "Playground",
     "Bibliothek": "Library",
@@ -82,27 +84,27 @@ category_translation = {
 }
 
 
-# Translate categories in the DataFrame
+#Translate categories in the DataFrame
 df["category_en"] = df["category"].map(category_translation).fillna(df["category"])
 
-# Sidebar for filtering options
+#Sidebar for filtering options
 st.sidebar.header("🔍 Filter by Category")
 
-# Unique translated categories for selection using radio buttons
+#Unique translated categories for selection using radio buttons
 categories_en = sorted(df["category_en"].dropna().unique())
 selected_category_en = st.sidebar.radio("Select Category", options=categories_en)
 
-# Get the original category corresponding to the selected English category
+#Getting the original category corresponding to the selected English category
 selected_category = df[df["category_en"] == selected_category_en]["category"].iloc[0]
 
-# Apply filters based on the selected category
+#Apply filters based on the selected category
 filtered_df = df[df["category"] == selected_category]
 
-# Display a message if no data is found in the selected filters
+#Display a message if no data is found in the selected filters
 if filtered_df.empty:
     st.warning("⚠️ No points of interest found for the selected category.")
 else:
-    # Define a tooltip to show additional information, handle missing data gracefully
+    #Define a tooltip to show additional information, handle missing data gracefully
     tooltip = {
         "html": "<b>Name:</b> {name}<br><b>Category:</b> {category}<br><b>Address:</b> {address}<br><b>Opening Hours:</b> {opening_hours}<br><b>Phone:</b> {phone}",
         "style": {
@@ -113,20 +115,20 @@ else:
         }
     }
 
-    # Pydeck ColumnLayer configuration for 3D visualization
+    #Pydeck ColumnLayer configuration for 3D visualization
     layer = pdk.Layer(
         "ColumnLayer",
         data=filtered_df,
         get_position='[lon, lat]',
-        get_elevation=500,  # Fixed elevation to give a 3D effect
-        elevation_scale=2,
-        radius=10,
-        get_fill_color='[0, 0, 255, 160]',  # Blue color for columns
+        get_elevation=50,  
+        elevation_scale=10,
+        radius=3,
+        get_fill_color='[0, 0, 255, 160]',  
         pickable=True,
         auto_highlight=True
     )
 
-    # Map configuration with 3D view and white background
+    #Map configuration with 3D view and white background
     view_state = pdk.ViewState(
         latitude=filtered_df["lat"].mean(),
         longitude=filtered_df["lon"].mean(),
@@ -135,17 +137,17 @@ else:
         bearing=0
     )
 
-    # White map style
+    #White map style
     white_map_style = "mapbox://styles/mapbox/light-v10"
 
-    # Render the map with the ColumnLayer and white background
+    #Render the map with the ColumnLayer and white background
     st.pydeck_chart(pdk.Deck(
         layers=[layer],
         initial_view_state=view_state,
         map_style=white_map_style,  # Set the map style to a white/light theme
         tooltip=tooltip  # Apply the tooltip
     ))
-# Footer
+#Display Footer
 st.markdown("""
     <p style="text-align: center; color: grey;">Skills: Programming - Introduction Level | A Project for exploring St. Gallen</p>
     """, unsafe_allow_html=True)
