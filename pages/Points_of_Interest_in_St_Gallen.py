@@ -1,18 +1,11 @@
+#Import packages
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
 import json
 
-#Setting Page configuration
-st.set_page_config(page_title="St. Gallen Points of Interest - 3D Map", page_icon="🗺️", layout="wide")
 
-#Setting title
-st.title("🗺️ 3D Visualization of Points of Interest in St. Gallen")
-
-#Displaying Introtext
-st.write("""Explore the city of St. Gallen through an interactive 3D map that 
-visualizes various points of interest. By selecting different categories you can see their locations represented with visual markers 
-on the map. When hovering your mouse over the market Name, Category, Address, Opening Hours and the Phone Number is displayed, if available """)
+#------------------------ Streamlit App ------------------------
 
 #Function to load and cache JSON data from the file
 @st.cache_data
@@ -41,6 +34,21 @@ def transform_data(data):
         })
     return pd.DataFrame(records)
 
+#------------------------ Streamlit App ------------------------
+
+#Setting Page configuration
+st.set_page_config(page_title="St. Gallen Points of Interest - 3D Map", page_icon="🗺️", layout="wide")
+
+#Setting title
+st.title("🗺️ 3D Visualization of Points of Interest in St. Gallen")
+
+#Displaying Introtext
+st.write("""Explore the city of St. Gallen through an interactive 3D map that 
+visualizes various points of interest. By selecting different categories you can see their locations represented with visual markers 
+on the map. When hovering your mouse over the marker Name, Category, Address, Opening Hours and the Phone Number are displayed if available. """)
+
+
+#------------------------ Logic ------------------------
 df = transform_data(data)
 
 #Dictionary to map categories to English
@@ -133,7 +141,7 @@ else:
         latitude=filtered_df["lat"].mean(),
         longitude=filtered_df["lon"].mean(),
         zoom=12,
-        pitch=50,  # Tilt the map for 3D view
+        pitch=50, 
         bearing=0
     )
 

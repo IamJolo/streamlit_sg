@@ -50,8 +50,8 @@ api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
 #Setting Main Title and Description
 st.title("📰 What Happened in St. Gallen?")
 st.write("""What Happened in St. Gallen allows you to explore recent news from St. Gallen.  By providing a Gemini API key, entering a specific date 
-range and selecting from several sources, including the St. Gallen Police, City Administration, and Canton of St. Gallen you an AI summary 
- what happended in St. Gallen
+range and selecting from several sources, including the St. Gallen Police, City Administration, and Canton of St. Gallen you receive an AI summary 
+of what happended in St. Gallen.
 """)
 
 #Defining the date input fields next to each other
