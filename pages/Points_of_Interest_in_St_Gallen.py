@@ -4,6 +4,8 @@ import pandas as pd
 import pydeck as pdk
 import json
 
+#Setting Page configuration
+st.set_page_config(page_title="St. Gallen Points of Interest - 3D Map", page_icon="🗺️", layout="wide")
 
 #------------------------ Streamlit App ------------------------
 
@@ -35,9 +37,6 @@ def transform_data(data):
     return pd.DataFrame(records)
 
 #------------------------ Streamlit App ------------------------
-
-#Setting Page configuration
-st.set_page_config(page_title="St. Gallen Points of Interest - 3D Map", page_icon="🗺️", layout="wide")
 
 #Setting title
 st.title("🗺️ 3D Visualization of Points of Interest in St. Gallen")

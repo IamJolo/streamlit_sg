@@ -1,5 +1,8 @@
+#Import packages
 import streamlit as st
 from PIL import Image
+
+#------------------------ Streamlit App ------------------------
 
 #Configuring the page and setting the title
 st.set_page_config(page_title="St. Gallen Information Hub", page_icon="🗺️", layout="wide")
